@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Ujicoba</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<script src="sensor.js"></script>
+		<script src="environment.js"></script>
+		<script src="lock.js"></script>
+		<script src="energySource.js"></script>
+
+		<script>
+			let env = new Environment();
+
+			let battery = new EnergySource("Battery", false);
+			let electricity = new EnergySource("Electricity", true);
+
+			let lightSensor1 = new LightSensor(false, true, 2);
+			let doorlock = new Lock(false);
+
+			let autoLock = false;
+
+			let sun = new Light(env.lightLevel);
+
+			sun.generateLight();
+			env.lightLevel = sun.lightLevel;
+
+			setInterval(function(){
+				sun.generateLight();
+				env.lightLevel = sun.lightLevel;
+
+				retrieveData();
+			}, 1000 * 60 * 60);
+
+			function retrieveData(){
+				document.getElementById("lightLevel").innerHTML = "Light level : " + env.lightLevel;
+
+				if(lightSensor1.checkIntensity(env.lightLevel)){
+					document.getElementById("energySource").innerHTML = "Energy Source : " + electricity.name;
+					if(autoLock){
+						doorlock.unlock();
+					}
+				}
+				else{
+					document.getElementById("energySource").innerHTML = "Energy Source : " + battery.name;
+					if(autoLock){
+						doorlock.lock();
+					}
+				}
+
+				if(doorlock.locked){
+					document.getElementById("doorLock").innerHTML = "Door : locked";
+				}
+				else{
+					document.getElementById("doorLock").innerHTML = "Door : unlocked";
+				}
+
+				if(autoLock){
+					document.getElementById("autoLock").innerHTML = "Auto-Lock System : enabled";
+				}
+				else{
+					document.getElementById("autoLock").innerHTML = "Auto-Lock System : disabled";
+				}
+			}
+
+			function toggleAL(){
+				document.getElementById("toggleLock").disabled = !autoLock;
+				autoLock = !autoLock;
+
+				retrieveData();
+			}
+
+			function toggleLock(){
+				if(doorlock.locked){
+					doorlock.unlock();
+				}
+				else{
+					doorlock.lock();
+				}
+
+				retrieveData();
+			}
+		</script>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	</head>
+  	<body onload="retrieveData()">
+		<div class="container-fluid mt-4 ml-4">
+			<p id="lightLevel"></p>
+			<p id="energySource"></p>
+			<p id="doorLock"></p>
+			<p id="autoLock"></p>
+	
+			<button type="button" onclick="toggleAL()" class="btn btn-primary">Toggle Auto-Lock System</button>
+			<button type="button" id="toggleLock" onclick="toggleLock()" class="btn btn-success">Toggle Lock</button>
+		</div>
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  	</body>
+</html>
