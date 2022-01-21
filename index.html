@@ -32,35 +32,35 @@
 
 				retrieveData();
 			}, 1000 * 60 * 60);
-
+			
 			function retrieveData(){
-				document.getElementById("lightLevel").innerHTML = "Light level : " + env.lightLevel;
+				document.getElementById("lightLevel").innerHTML = env.lightLevel;
 
 				if(lightSensor1.checkIntensity(env.lightLevel)){
-					document.getElementById("energySource").innerHTML = "Energy Source : " + electricity.name;
+					document.getElementById("energySource").innerHTML = electricity.name;
 					if(autoLock){
 						doorlock.unlock();
 					}
 				}
 				else{
-					document.getElementById("energySource").innerHTML = "Energy Source : " + battery.name;
+					document.getElementById("energySource").innerHTML = battery.name;
 					if(autoLock){
 						doorlock.lock();
 					}
 				}
 
 				if(doorlock.locked){
-					document.getElementById("doorLock").innerHTML = "Door : locked";
+					document.getElementById("doorLock").innerHTML = "Locked";
 				}
 				else{
-					document.getElementById("doorLock").innerHTML = "Door : unlocked";
+					document.getElementById("doorLock").innerHTML = "Unlocked";
 				}
 
 				if(autoLock){
-					document.getElementById("autoLock").innerHTML = "Auto-Lock System : enabled";
+					document.getElementById("autoLock").innerHTML = "Enabled";
 				}
 				else{
-					document.getElementById("autoLock").innerHTML = "Auto-Lock System : disabled";
+					document.getElementById("autoLock").innerHTML = "Disabled";
 				}
 			}
 
@@ -88,13 +88,58 @@
 	</head>
   	<body onload="retrieveData()">
 		<div class="container-fluid mt-4 ml-4">
-			<p id="lightLevel"></p>
-			<p id="energySource"></p>
-			<p id="doorLock"></p>
-			<p id="autoLock"></p>
-	
-			<button type="button" onclick="toggleAL()" class="btn btn-primary">Toggle Auto-Lock System</button>
-			<button type="button" id="toggleLock" onclick="toggleLock()" class="btn btn-success">Toggle Lock</button>
+			<div class="row">
+				<div class="col-md-12">
+					<h3>IoT WEB SIMULATOR</h3>
+				</div>
+			</div>
+			<div class="row mt-4">
+				<table class="table" style="width: 95%">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Description</th>
+							<th scope="col">Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td scope="row">Light Level :</td>
+							<td>
+								<p id="lightLevel"></p>
+							</td>
+						</tr>
+						<tr>
+							<td scope="row">Energy Source :</td>
+							<td>
+								<p id="energySource"></p>
+							</td>
+						</tr>
+						<tr>
+							<td scope="row">Door :</td>
+							<td>
+								<p id="doorLock"></p>
+							</td>
+						</tr>
+						<tr>
+							<td scope="row">Auto-Lock System :</td>
+							<td>
+								<p id="autoLock"></p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<button type="button" onclick="toggleAL()" class="btn btn-primary" style="width:90%">Toggle Auto-Lock System</button>
+				</div>
+				<div class="col-md-6">
+					<button type="button" id="toggleLock" onclick="toggleLock()" class="btn btn-success" style="width:90%">Toggle Lock</button>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid mt-4 ml-4">
+			
 		</div>
 
 		<!-- Optional JavaScript -->
